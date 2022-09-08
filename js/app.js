@@ -3,6 +3,7 @@ const catagorys = () => {
     fetch(url)
         .then(res => res.json())
         .then(data => getCategoryNews(data.data.news_category))
+        .catch(console.log("sumthing romg"))
 }
 const getCategoryNews = (categorys) => {
     // console.log(categorys)
@@ -39,7 +40,7 @@ const displayCategoryNews = (newss) => {
     const newsCaed = document.getElementById('display-news');
     newsCaed.innerHTML = '';
     newss.forEach(news => {
-        console.log(news)
+        // console.log(news)
         const cardDiv = document.createElement('div');
         cardDiv.classList.add('col')
         cardDiv.innerHTML = `
@@ -83,7 +84,7 @@ const displayCategoryNews = (newss) => {
               class="btn "
               data-bs-toggle="modal"
               data-bs-target="#exampleModal"
-              onclick=""
+              onclick="showDetalis('${news._id}')"
             >
               <i class="fa-solid fa-circle-chevron-right"></i>
             </button>
@@ -99,4 +100,27 @@ const displayCategoryNews = (newss) => {
 
     })
 }
+
+const showDetalis = async newsId => {
+    const url = ` https://openapi.programming-hero.com/api/news/${newsId}`;
+    const res = await fetch(url)
+    const data = await res.json();
+    displayModalInformation(data.data[0])
+}
+
+const displayModalInformation = (id) => {
+    console.log(id)
+    const modatSection = document.getElementById("exampleModalLabel")
+    modatSection.innerText = id.title;
+    const detalceModal = document.getElementById('detalce');
+    detalceModal.innerHTML = `
+    <div class="">
+        <img src='${id.image_url}' class="rounded flud" style="width: 18rem;alt="...">
+    </div>
+    <p>${id.details}</p>
+    <p>${id.author.published_date}</p>
+    <small><i class="fa-solid fa-eye"></i> ${id.total_view} </small>      
+    `
+}
+
 catagorys()
