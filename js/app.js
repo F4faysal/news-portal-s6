@@ -1,8 +1,8 @@
 const catagorys = () => {
     const url = `https://openapi.programming-hero.com/api/news/categories`;
     fetch(url)
-        .then(res => res.json())
-        .then(data => getCategoryNews(data.data.news_category))
+    .then(res => res.json())
+    .then(data => getCategoryNews(data.data.news_category))
 }
 const getCategoryNews = (categorys) => {
     // console.log(categorys)
@@ -13,8 +13,8 @@ const getCategoryNews = (categorys) => {
         newUl.classList.add('navbar-nav')
         newUl.innerHTML = `
         <li class="nav-item">
-                <a class="nav-link active" aria-current="page" onclick="showCategoryNews('${category.category_id}')" href="#">${category.category_name}</a>
-              </li>
+        <a  class="nav-link active" aria-current="page" onclick="showCategoryNews('${category.category_id}')" href="#">${category.category_name}</a>
+        </li>
         `
         divcatagory.appendChild(newUl)
     });
@@ -22,33 +22,56 @@ const getCategoryNews = (categorys) => {
 }
 
 const showCategoryNews = async category_id => {
-    const url =` https://openapi.programming-hero.com/api/news/category/${category_id}`;
+    const url =`https://openapi.programming-hero.com/api/news/category/${category_id}`;
     const res = await  fetch(url)
     const data = await res.json();
     displayCategoryNews(data.data)
+    
 }
+
 const displayCategoryNews = (newss) => {
+    const itemFound = document.getElementById('item-number');
+    itemFound.innerText  = newss.length;
+    const foundCatagoryName = document.getElementById('catagory-name');
+    
+
+
     const newsCaed = document.getElementById('display-news');
+    newsCaed.innerHTML = '';
     newss.forEach(news => {
+        console.log(news)
         const cardDiv = document.createElement('div');
         cardDiv.classList.add('col')
         cardDiv.innerHTML = `
-        <div class="card mb-3" style="max-width: 540px">
+        <div class="card mb-3" >
               <div class="row g-0">
                 <div class="col-md-4">
-                  <img src="..." class="img-fluid rounded-start" alt="..." />
+                  <img src="${news.thumbnail_url}" class="img-fluid rounded-start" alt="..." />
                 </div>
                 <div class="col-md-8">
                   <div class="card-body">
-                    <h5 class="card-title">Card title</h5>
-                    <p class="card-text">
-                      This is a wider card with supporting text below as a
-                      natural lead-in to additional content. This content is a
-                      little bit longer.
-                    </p>
-                    <p class="card-text">
-                      <small class="text-muted">Last updated 3 mins ago</small>
-                    </p>
+                    <h5 class="card-title">${news.title}</h5>
+                    <p class="card-text">${news.details.slice(0 ,300)}...</p>
+                    
+                    <div class="d-flex align-items-center">
+                <div>
+                  <img
+                    src="${news.author.img}"
+                    class="rounded-circle faysal"
+                    height="30"
+                    alt="Portrait of a Woman"
+                    loading="lazy"
+                  />
+                </div>
+                <div class="fs-6 px-3">
+                  <h6 class="">${news.author.name ? news.author.name : 'no name' }</h6>
+                  <small class="text-muted">${news.author.published_date ? news.author.published_date : 'No dete' }</small>
+                </div>
+                <div class="mx-4">
+                  <small>view ${news.total_view} </small>
+                </div>
+                <a class="btn" href="#" >  </a>
+              </div>
                   </div>
                 </div>
               </div>
@@ -56,16 +79,7 @@ const displayCategoryNews = (newss) => {
         `
         newsCaed.appendChild(cardDiv)
         // creat display
-    console.log(news)
 
     })
-//   const detalce = document.getElementById('detalce');
-//   detalce.innerHTML = `
-//     <p>${titel.releaseDate ? titel.releaseDate : 'No releaseDate' }</p>
-//     <p >${titel.mainFeatures.chipSet ? titel.mainFeatures.chipSet : 'not'}</p>
-//     <p >${titel.mainFeatures.displaySize ? titel.mainFeatures.displaySize : 'not'}</p>
-//     <p >${titel.mainFeatures.memory ? titel.mainFeatures.memory : 'memory not found' }</p>
-//     <p >${titel.others.Bluetooth ? titel.others.Bluetooth : 'not found others'}</p>
-//   ` 
 }
 catagorys()
